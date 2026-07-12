@@ -1,5 +1,5 @@
 <p align="center">
-  <!-- logo goes here -->
+  <img src="art/logo.png" alt="PDFPost" width="520">
 </p>
 
 # PDFPost
@@ -8,6 +8,7 @@
 
 [![tests](https://github.com/andyshrx/pdfpost/actions/workflows/tests.yml/badge.svg)](https://github.com/andyshrx/pdfpost/actions/workflows/tests.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![buy me a coffee](https://img.shields.io/badge/buy%20me%20a%20coffee-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/andyshrx)
 
 Design a template once in [Liquid](https://shopify.github.io/liquid/), render documents
 from any app with one authenticated API call. Invoices, receipts, certificates, reports,
@@ -144,6 +145,18 @@ repository rather than opening a public issue.
 
 Template sharing/import, multi-page report pagination controls, S3 artifact examples,
 a hosted demo, and whatever the issues page says people need.
+
+## A note from me
+
+Hi, I'm Andy. I built PDFPost because paying per document to merge JSON into some HTML
+never sat right with me, and I wanted a real excuse to go deep on Laravel. Now it does
+my own paperwork.
+
+If it is missing something you need, open an issue and tell me about your use case. I am
+happy to make updates, and feature requests genuinely make my day.
+
+If PDFPost saves you some money or time, you can
+[buy me a coffee](https://buymeacoffee.com/andyshrx). Yes I drew the logo myself.
 
 ## License
 
