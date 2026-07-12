@@ -14,7 +14,9 @@ class RenderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'html' => ['required', 'string', 'max:2000000'],
+            'html' => ['required_without:template', 'prohibits:template', 'string', 'max:2000000'],
+            'template' => ['required_without:html', 'string', 'exists:templates,slug'],
+            'data' => ['sometimes', 'array', 'prohibits:html'],
             'format' => ['sometimes', 'in:pdf'],
             'options' => ['sometimes', 'array'],
             'options.paper_size' => ['sometimes', 'in:a4,letter'],

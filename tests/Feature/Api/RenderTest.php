@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Template;
 use App\Rendering\RenderEngine;
 use App\Rendering\RenderException;
 
@@ -49,4 +50,43 @@ it('returns json validation errors even without an accept header', function () {
 
     $response->assertUnprocessable();
     expect($response->headers->get('content-type'))->toContain('application/json');
+});
+
+it('renders a saved template with data merged in', function () {
+    $template = Template::factory()->create(['slug' => 'invoice']);
+    $template->publishNewVersion('<h1>Invoice for {{ customer }}</h1>');
+
+    $this->mock(RenderEngine::class)
+        ->shouldReceive('render')
+        ->once()
+        ->with('<h1>Invoice for Acme Co</h1>', [])
+        ->andReturn('%PDF-1.7 merged');
+
+    $this->postJson('/api/v1/render', [
+        'template' => 'invoice',
+        'data' => ['customer' => 'Acme Co'],
+    ])->assertOk();
+});
+
+it('rejects a render for an unknown template', function () {
+    $this->postJson('/api/v1/render', ['template' => 'missing'])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['template']);
+});
+
+it('rejects a render when both html and template are given', function () {
+    Template::factory()->create(['slug' => 'invoice'])->publishNewVersion('x');
+
+    $this->postJson('/api/v1/render', [
+        'html' => '<p>x</p>',
+        'template' => 'invoice',
+    ])->assertUnprocessable();
+});
+
+it('rejects a render for a template with no published version', function () {
+    Template::factory()->create(['slug' => 'empty']);
+
+    $this->postJson('/api/v1/render', ['template' => 'empty'])
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors(['template']);
 });
