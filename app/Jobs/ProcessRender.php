@@ -3,11 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Render;
+use App\Models\User;
+use App\Notifications\RenderFailuresDetected;
 use App\Rendering\LiquidRenderer;
 use App\Rendering\RenderEngine;
 use App\Rendering\TemplateSyntaxException;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
 
@@ -75,6 +78,29 @@ class ProcessRender implements ShouldQueue
         $render->markFailed($exception?->getMessage() ?? 'Render failed.');
 
         $this->notify($render);
+        $this->alertOperatorIfFailingRepeatedly($render);
+    }
+
+    /**
+     * Three failures in a row usually means the engine is down, not a bad
+     * template. Tell the operator, at most once an hour.
+     */
+    protected function alertOperatorIfFailingRepeatedly(Render $render): void
+    {
+        $recent = Render::whereNotNull('completed_at')
+            ->latest('completed_at')
+            ->take(3)
+            ->pluck('status');
+
+        if ($recent->count() < 3 || ! $recent->every(fn ($status) => $status === 'failed')) {
+            return;
+        }
+
+        if (! Cache::add('pdfpost:failure-alerted', true, now()->addHour())) {
+            return;
+        }
+
+        User::query()->oldest('id')->first()?->notify(new RenderFailuresDetected($render->error));
     }
 
     protected function notify(Render $render): void
