@@ -120,7 +120,7 @@ The secret is `PDFPOST_WEBHOOK_SECRET`, or derived from `APP_KEY` when unset.
 | | PDFPost | Gotenberg | jsreport | Carbone | PDF SaaS APIs |
 |---|---|---|---|---|---|
 | Templates + data merge | Liquid | no, conversion only | yes | yes | yes |
-| Free template count | unlimited | n/a | 5, then $995+/yr | unlimited | pay per doc |
+| Free template count | unlimited | n/a | 5 on the free tier | unlimited | metered plans |
 | License | MIT | MIT | LGPL + paid tiers | CCL, no SaaS use | proprietary |
 | Self-hosted | yes | yes | partly | yes | no |
 | Async + signed webhooks | yes | no | no | no | some |
