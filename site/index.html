@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDFPost. POST JSON, get a pixel-perfect PDF back.</title>
+  <meta name="description" content="Self-hosted document generation API. Design a template once in Liquid, render invoices, receipts, certificates, reports and og-images with one API call. MIT licensed, one docker compose up.">
+  <meta property="og:title" content="PDFPost">
+  <meta property="og:description" content="POST JSON, get a pixel-perfect PDF back. Self-hosted, MIT, no per-document pricing.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/andyshrx/pdfpost/main/site/og.png">
+  <meta property="og:url" content="https://pdfpost.dev">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="https://raw.githubusercontent.com/andyshrx/pdfpost/main/site/logo.png">
+  <style>
+    :root {
+      --ink: #18181b;
+      --muted: #71717a;
+      --paper: #fffdf7;
+      --card: #ffffff;
+      --line: #e4e4e7;
+      --accent: #ffdd00;
+      --code-bg: #18181b;
+      --code-ink: #fafafa;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --ink: #fafafa;
+        --muted: #a1a1aa;
+        --paper: #101012;
+        --card: #18181b;
+        --line: #2b2b30;
+        --code-bg: #060607;
+        --code-ink: #e4e4e7;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+    .logo { display: block; margin: 0 auto 8px; max-width: 420px; width: 100%; height: auto; }
+    @media (prefers-color-scheme: dark) {
+      .logo { filter: invert(1) hue-rotate(180deg); background: transparent; border-radius: 12px; }
+    }
+    h1 { font-size: clamp(28px, 5vw, 40px); text-align: center; line-height: 1.2; margin-top: 24px; }
+    .sub { text-align: center; color: var(--muted); font-size: 18px; margin: 12px auto 28px; max-width: 560px; }
+    .buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+    .btn {
+      display: inline-block; padding: 10px 22px; border-radius: 999px;
+      text-decoration: none; font-weight: 600; font-size: 15px;
+      border: 2px solid var(--ink); color: var(--ink); transition: transform .1s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary { background: var(--ink); color: var(--paper); }
+    .btn.coffee { background: var(--accent); border-color: var(--accent); color: #18181b; }
+    .demo { width: 100%; border-radius: 12px; border: 1px solid var(--line); margin-bottom: 48px; }
+    pre {
+      background: var(--code-bg); color: var(--code-ink);
+      padding: 18px 20px; border-radius: 12px; overflow-x: auto;
+      font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13.5px; line-height: 1.7;
+      margin: 12px 0 32px;
+    }
+    pre .c { color: #8b8b94; }
+    pre .y { color: var(--accent); }
+    h2 { font-size: 22px; margin: 40px 0 8px; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 20px 0 8px; padding: 0; list-style: none; }
+    .features li {
+      background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+      padding: 14px 16px; font-size: 14.5px;
+    }
+    .features b { display: block; margin-bottom: 2px; }
+    footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; text-align: center; }
+    footer a { color: inherit; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <img class="logo" src="https://raw.githubusercontent.com/andyshrx/pdfpost/main/site/logo.png" alt="PDFPost.dev, hand drawn logo with a yellow envelope">
+
+    <h1>POST JSON, get a pixel-perfect PDF back.</h1>
+    <p class="sub">A self-hosted document generation API. Design a template once in Liquid,
+    render invoices, receipts, certificates, reports and og-images from any app. MIT, no per-document pricing.</p>
+
+    <div class="buttons">
+      <a class="btn primary" href="https://github.com/andyshrx/pdfpost">View on GitHub</a>
+      <a class="btn" href="https://github.com/andyshrx/pdfpost#quick-start-docker-compose">Quick start</a>
+      <a class="btn coffee" href="https://buymeacoffee.com/andyshrx">Buy me a coffee</a>
+    </div>
+
+    <img class="demo" src="https://raw.githubusercontent.com/andyshrx/pdfpost/main/site/demo.gif" alt="Terminal demo: one curl request returns a rendered invoice PDF">
+
+    <h2>One call</h2>
+    <pre><code>curl -X POST https://pdf.yourserver.com/api/v1/render \
+  -H <span class="y">"Authorization: Bearer $TOKEN"</span> \
+  -H 'Content-Type: application/json' \
+  -d '{<span class="y">"template"</span>:"invoice","data":{"customer":"Acme Co","total":"$462.00"}}' \
+  -o invoice.pdf</code></pre>
+
+    <h2>One command to run it</h2>
+    <pre><code><span class="c"># app + queue worker + scheduler + sandboxed Chromium</span>
+git clone https://github.com/andyshrx/pdfpost.git && cd pdfpost
+cp .env.example .env
+docker compose run --rm app php artisan key:generate
+docker compose up -d</code></pre>
+
+    <h2>What you get</h2>
+    <ul class="features">
+      <li><b>Versioned templates</b> Liquid with history, renders pin their version</li>
+      <li><b>Live editor</b> CodeMirror with a preview that re-renders as you type</li>
+      <li><b>Sync and async</b> stream the PDF back, or queue it and get a webhook</li>
+      <li><b>Signed webhooks</b> HMAC-SHA256 on every callback</li>
+      <li><b>og-images</b> the same template renders a 1200x630 social card</li>
+      <li><b>Operator friendly</b> scoped tokens, rate limits, retention pruning</li>
+    </ul>
+
+    <footer>
+      <p>MIT licensed. Built by <a href="https://github.com/andyshrx">Andy</a>, who also drew the logo.
+      The social preview image for this page was rendered by PDFPost itself.</p>
+    </footer>
+  </div>
+</body>
+</html>
