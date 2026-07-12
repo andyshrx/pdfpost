@@ -43,7 +43,8 @@
     .wrap { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
     .logo { display: block; margin: 0 auto 8px; max-width: 420px; width: 100%; height: auto; }
     @media (prefers-color-scheme: dark) {
-      .logo { filter: invert(1) hue-rotate(180deg); background: transparent; border-radius: 12px; }
+      /* the drawing lives on white paper, keep it that way in dark mode */
+      .logo { background: #fffdf7; padding: 18px 24px; border-radius: 16px; }
     }
     h1 { font-size: clamp(28px, 5vw, 40px); text-align: center; line-height: 1.2; margin-top: 24px; }
     .sub { text-align: center; color: var(--muted); font-size: 18px; margin: 12px auto 28px; max-width: 560px; }
