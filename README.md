@@ -38,8 +38,12 @@ so what you see in the preview is what lands in the PDF.
 git clone https://github.com/andyshrx/pdfpost.git && cd pdfpost
 cp .env.example .env
 docker compose run --rm app php artisan key:generate
-docker compose up -d
+docker compose up -d   # pulls the prebuilt image from ghcr
 ```
+
+Prebuilt multi-arch images (amd64 and arm64) are published to
+`ghcr.io/andyshrx/pdfpost` on every release. To build from source instead,
+run `docker compose build` first.
 
 That gives you the app on [http://localhost:8080](http://localhost:8080), a queue worker,
 a scheduler, and Gotenberg on an internal network. Register an account, seed the template
