@@ -31,6 +31,20 @@ return [
 
     'artifact_disk' => env('PDFPOST_ARTIFACT_DISK', 'local'),
 
+    'retention_days' => (int) env('PDFPOST_RETENTION_DAYS', 7),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Rate Limiting
+    |--------------------------------------------------------------------------
+    |
+    | Requests per minute allowed on the API, per token owner (or IP for
+    | unauthenticated requests).
+    |
+    */
+
+    'rate_limit' => (int) env('PDFPOST_RATE_LIMIT', 60),
+
     /*
     |--------------------------------------------------------------------------
     | Webhooks

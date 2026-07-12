@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use Database\Factories\RenderFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Render extends Model
 {
     /** @use HasFactory<RenderFactory> */
-    use HasFactory;
+    use HasFactory, Prunable;
 
     protected $fillable = [
         'template_version_id', 'format', 'status', 'html', 'payload',
@@ -48,6 +51,23 @@ class Render extends Model
     public function webhookDeliveries(): HasMany
     {
         return $this->hasMany(WebhookDelivery::class);
+    }
+
+    /**
+     * Completed renders older than the retention window get pruned daily.
+     */
+    public function prunable(): Builder
+    {
+        return static::query()
+            ->whereNotNull('completed_at')
+            ->where('completed_at', '<', now()->subDays(config('pdfpost.retention_days')));
+    }
+
+    protected function pruning(): void
+    {
+        if ($this->artifact_disk && $this->artifact_path) {
+            Storage::disk($this->artifact_disk)->delete($this->artifact_path);
+        }
     }
 
     public function fileExtension(): string
