@@ -1,0 +1,60 @@
+services:
+  app:
+    build: .
+    image: pdfpost
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      AUTORUN_ENABLED: "true" # run migrations on boot
+      PDFPOST_GOTENBERG_URL: http://gotenberg:3000
+      # keep the sqlite file inside the storage volume, never mount over code
+      DB_DATABASE: /var/www/html/storage/app/database.sqlite
+    volumes:
+      - pdfpost-storage:/var/www/html/storage/app
+    depends_on:
+      - gotenberg
+    networks:
+      - default
+      - render
+
+  worker:
+    image: pdfpost
+    command: ["php", "/var/www/html/artisan", "queue:work", "--tries=3", "--max-time=3600"]
+    env_file: .env
+    environment:
+      PDFPOST_GOTENBERG_URL: http://gotenberg:3000
+      DB_DATABASE: /var/www/html/storage/app/database.sqlite
+    volumes:
+      - pdfpost-storage:/var/www/html/storage/app
+    depends_on:
+      - app
+      - gotenberg
+    networks:
+      - default
+      - render
+
+  scheduler:
+    image: pdfpost
+    command: ["php", "/var/www/html/artisan", "schedule:work"]
+    env_file: .env
+    environment:
+      DB_DATABASE: /var/www/html/storage/app/database.sqlite
+    volumes:
+      - pdfpost-storage:/var/www/html/storage/app
+    depends_on:
+      - app
+
+  # chromium stays on an internal network with no way out to the internet,
+  # so user templates cannot be used to reach other services (ssrf)
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    networks:
+      - render
+
+networks:
+  render:
+    internal: true
+
+volumes:
+  pdfpost-storage:

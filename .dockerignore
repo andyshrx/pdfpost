@@ -1,0 +1,17 @@
+.git
+.github
+.notes
+.superpowers
+node_modules
+vendor
+public/build
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+database/database.sqlite
+.env
+.env.*
+!.env.example
+tests
+bootstrap/cache/*.php
