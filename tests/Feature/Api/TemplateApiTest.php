@@ -1,6 +1,12 @@
 <?php
 
 use App\Models\Template;
+use App\Models\User;
+use Laravel\Sanctum\Sanctum;
+
+beforeEach(function () {
+    Sanctum::actingAs(User::factory()->create(), ['render', 'templates']);
+});
 
 it('creates a template with its first version', function () {
     $response = $this->postJson('/api/v1/templates', [

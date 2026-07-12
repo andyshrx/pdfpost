@@ -1,8 +1,14 @@
 <?php
 
 use App\Models\Template;
+use App\Models\User;
 use App\Rendering\RenderEngine;
 use App\Rendering\RenderException;
+use Laravel\Sanctum\Sanctum;
+
+beforeEach(function () {
+    Sanctum::actingAs(User::factory()->create(), ['render', 'templates']);
+});
 
 it('renders inline html to a pdf', function () {
     $this->mock(RenderEngine::class)
