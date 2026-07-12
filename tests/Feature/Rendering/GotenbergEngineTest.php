@@ -40,3 +40,34 @@ it('rejects a paper size the engine does not support', function () {
 
     app(GotenbergEngine::class)->render('<p>x</p>', ['paper_size' => 'a3']);
 })->throws(InvalidArgumentException::class);
+
+it('renders png through the gotenberg screenshot route', function () {
+    Http::fake(['*/forms/chromium/screenshot/html' => Http::response('png-bytes', 200)]);
+
+    $png = app(GotenbergEngine::class)->render('<p>og</p>', ['format' => 'png']);
+
+    expect($png)->toBe('png-bytes');
+
+    Http::assertSent(function ($request) {
+        return str_ends_with($request->url(), '/forms/chromium/screenshot/html')
+            && collect($request->data())->contains(
+                fn ($part) => ($part['name'] ?? null) === 'width' && $part['contents'] === '1200'
+            );
+    });
+});
+
+it('accepts custom screenshot dimensions', function () {
+    Http::fake(['*' => Http::response('png-bytes', 200)]);
+
+    app(GotenbergEngine::class)->render('<p>x</p>', ['format' => 'png', 'width' => 800, 'height' => 400]);
+
+    Http::assertSent(fn ($request) => collect($request->data())->contains(
+        fn ($part) => ($part['name'] ?? null) === 'width' && $part['contents'] === '800'
+    ));
+});
+
+it('rejects an unknown format', function () {
+    Http::fake();
+
+    app(GotenbergEngine::class)->render('<p>x</p>', ['format' => 'gif']);
+})->throws(InvalidArgumentException::class);

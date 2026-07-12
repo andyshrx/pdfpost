@@ -3,6 +3,8 @@
 namespace App\Rendering;
 
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -17,23 +19,22 @@ class GotenbergEngine implements RenderEngine
         'letter' => ['paperWidth' => '8.5', 'paperHeight' => '11'],
     ];
 
+    /**
+     * Default screenshot size, the standard og-image dimensions.
+     */
+    private const OG_WIDTH = 1200;
+
+    private const OG_HEIGHT = 630;
+
     public function render(string $html, array $options = []): string
     {
-        $size = $options['paper_size'] ?? 'a4';
+        $format = $options['format'] ?? 'pdf';
 
-        if (! isset(self::PAPER_SIZES[$size])) {
-            throw new InvalidArgumentException("Unsupported paper size [{$size}].");
-        }
-
-        try {
-            $response = Http::baseUrl(config('pdfpost.gotenberg_url'))
-                ->timeout(config('pdfpost.render_timeout'))
-                ->connectTimeout(config('pdfpost.connect_timeout'))
-                ->attach('files', $html, 'index.html')
-                ->post('/forms/chromium/convert/html', self::PAPER_SIZES[$size]);
-        } catch (ConnectionException $e) {
-            throw new RenderException('Could not reach the render engine: '.$e->getMessage(), previous: $e);
-        }
+        $response = match ($format) {
+            'pdf' => $this->convertToPdf($html, $options),
+            'png' => $this->screenshot($html, $options),
+            default => throw new InvalidArgumentException("Unsupported format [{$format}]."),
+        };
 
         if ($response->failed()) {
             throw new RenderException(
@@ -42,5 +43,44 @@ class GotenbergEngine implements RenderEngine
         }
 
         return $response->body();
+    }
+
+    protected function convertToPdf(string $html, array $options): Response
+    {
+        $size = $options['paper_size'] ?? 'a4';
+
+        if (! isset(self::PAPER_SIZES[$size])) {
+            throw new InvalidArgumentException("Unsupported paper size [{$size}].");
+        }
+
+        return $this->send('/forms/chromium/convert/html', $html, self::PAPER_SIZES[$size]);
+    }
+
+    protected function screenshot(string $html, array $options): Response
+    {
+        return $this->send('/forms/chromium/screenshot/html', $html, [
+            'format' => 'png',
+            'width' => (string) ($options['width'] ?? self::OG_WIDTH),
+            'height' => (string) ($options['height'] ?? self::OG_HEIGHT),
+            'clip' => 'true',
+        ]);
+    }
+
+    protected function send(string $route, string $html, array $form): Response
+    {
+        try {
+            return $this->client()
+                ->attach('files', $html, 'index.html')
+                ->post($route, $form);
+        } catch (ConnectionException $e) {
+            throw new RenderException('Could not reach the render engine: '.$e->getMessage(), previous: $e);
+        }
+    }
+
+    protected function client(): PendingRequest
+    {
+        return Http::baseUrl(config('pdfpost.gotenberg_url'))
+            ->timeout(config('pdfpost.render_timeout'))
+            ->connectTimeout(config('pdfpost.connect_timeout'));
     }
 }
