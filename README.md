@@ -15,7 +15,12 @@ curl -X POST http://localhost:8000/api/v1/render \
 
 ```bash
 docker run --rm -d -p 127.0.0.1:3000:3000 gotenberg/gotenberg:8
-composer install && npm install && npm run build
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+npm install && npm run build
 php artisan serve
 ```
 
