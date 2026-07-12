@@ -4,6 +4,4 @@ namespace App\Rendering;
 
 use RuntimeException;
 
-class RenderException extends RuntimeException
-{
-}
+class RenderException extends RuntimeException {}
