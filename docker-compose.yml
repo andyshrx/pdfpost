@@ -11,6 +11,8 @@ services:
       # keep the sqlite file inside the storage volume, never mount over code
       DB_DATABASE: /var/www/html/storage/app/database.sqlite
     volumes:
+      # mounted so key:generate can write to it and all services share it
+      - ./.env:/var/www/html/.env
       - pdfpost-storage:/var/www/html/storage/app
     depends_on:
       - gotenberg
@@ -26,6 +28,7 @@ services:
       PDFPOST_GOTENBERG_URL: http://gotenberg:3000
       DB_DATABASE: /var/www/html/storage/app/database.sqlite
     volumes:
+      - ./.env:/var/www/html/.env
       - pdfpost-storage:/var/www/html/storage/app
     depends_on:
       - app
@@ -41,6 +44,7 @@ services:
     environment:
       DB_DATABASE: /var/www/html/storage/app/database.sqlite
     volumes:
+      - ./.env:/var/www/html/.env
       - pdfpost-storage:/var/www/html/storage/app
     depends_on:
       - app
