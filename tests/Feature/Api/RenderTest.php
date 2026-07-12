@@ -33,12 +33,20 @@ it('rejects an unknown paper size', function () {
     ])->assertUnprocessable()->assertJsonValidationErrors(['options.paper_size']);
 });
 
-it('returns 503 when the render engine is down', function () {
+it('returns 503 without leaking engine details when the render engine is down', function () {
     $this->mock(RenderEngine::class)
         ->shouldReceive('render')
-        ->andThrow(new RenderException('Could not reach the render engine'));
+        ->andThrow(new RenderException('cURL error 7: Failed to connect to localhost port 3009'));
 
-    $this->postJson('/api/v1/render', ['html' => '<p>x</p>'])
-        ->assertStatus(503)
-        ->assertJsonStructure(['message']);
+    $response = $this->postJson('/api/v1/render', ['html' => '<p>x</p>']);
+
+    $response->assertStatus(503)->assertJsonStructure(['message']);
+    expect($response->json('message'))->not->toContain('localhost');
+});
+
+it('returns json validation errors even without an accept header', function () {
+    $response = $this->post('/api/v1/render', []);
+
+    $response->assertUnprocessable();
+    expect($response->headers->get('content-type'))->toContain('application/json');
 });

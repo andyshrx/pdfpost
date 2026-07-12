@@ -34,3 +34,9 @@ it('throws a render exception when gotenberg returns an error', function () {
 
     app(GotenbergEngine::class)->render('<p>x</p>');
 })->throws(RenderException::class);
+
+it('rejects a paper size the engine does not support', function () {
+    Http::fake();
+
+    app(GotenbergEngine::class)->render('<p>x</p>', ['paper_size' => 'a3']);
+})->throws(InvalidArgumentException::class);

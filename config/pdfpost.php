@@ -17,4 +17,6 @@ return [
 
     'render_timeout' => (int) env('PDFPOST_RENDER_TIMEOUT', 30),
 
+    'connect_timeout' => (int) env('PDFPOST_CONNECT_TIMEOUT', 2),
+
 ];

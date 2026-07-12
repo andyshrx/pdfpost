@@ -4,6 +4,8 @@ namespace App\Rendering;
 
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 
 class GotenbergEngine implements RenderEngine
 {
@@ -17,20 +19,25 @@ class GotenbergEngine implements RenderEngine
 
     public function render(string $html, array $options = []): string
     {
-        $form = self::PAPER_SIZES[$options['paper_size'] ?? 'a4'];
-        $url = rtrim(config('pdfpost.gotenberg_url'), '/').'/forms/chromium/convert/html';
+        $size = $options['paper_size'] ?? 'a4';
+
+        if (! isset(self::PAPER_SIZES[$size])) {
+            throw new InvalidArgumentException("Unsupported paper size [{$size}].");
+        }
 
         try {
-            $response = Http::timeout(config('pdfpost.render_timeout'))
+            $response = Http::baseUrl(config('pdfpost.gotenberg_url'))
+                ->timeout(config('pdfpost.render_timeout'))
+                ->connectTimeout(config('pdfpost.connect_timeout'))
                 ->attach('files', $html, 'index.html')
-                ->post($url, $form);
+                ->post('/forms/chromium/convert/html', self::PAPER_SIZES[$size]);
         } catch (ConnectionException $e) {
             throw new RenderException('Could not reach the render engine: '.$e->getMessage(), previous: $e);
         }
 
         if ($response->failed()) {
             throw new RenderException(
-                'Render engine returned HTTP '.$response->status().': '.mb_substr($response->body(), 0, 500)
+                'Render engine returned HTTP '.$response->status().': '.Str::limit($response->body(), 500)
             );
         }
 
