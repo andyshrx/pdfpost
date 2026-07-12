@@ -17,9 +17,12 @@ class RenderRequest extends FormRequest
             'html' => ['required_without:template', 'prohibits:template', 'string', 'max:2000000'],
             'template' => ['required_without:html', 'string', 'exists:templates,slug'],
             'data' => ['sometimes', 'array', 'prohibits:html'],
-            'format' => ['sometimes', 'in:pdf'],
+            'format' => ['sometimes', 'in:pdf,png'],
             'options' => ['sometimes', 'array'],
             'options.paper_size' => ['sometimes', 'in:a4,letter'],
+            'options.width' => ['sometimes', 'integer', 'between:16,4000'],
+            'options.height' => ['sometimes', 'integer', 'between:16,4000'],
+            'webhook_url' => ['sometimes', 'url:http,https', 'max:2048'],
         ];
     }
 }

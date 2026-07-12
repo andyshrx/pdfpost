@@ -14,7 +14,7 @@ it('renders inline html to a pdf', function () {
     $this->mock(RenderEngine::class)
         ->shouldReceive('render')
         ->once()
-        ->with('<h1>invoice</h1>', ['paper_size' => 'letter'])
+        ->with('<h1>invoice</h1>', ['paper_size' => 'letter', 'format' => 'pdf'])
         ->andReturn('%PDF-1.7 fake pdf bytes');
 
     $response = $this->postJson('/api/v1/render', [
@@ -65,7 +65,7 @@ it('renders a saved template with data merged in', function () {
     $this->mock(RenderEngine::class)
         ->shouldReceive('render')
         ->once()
-        ->with('<h1>Invoice for Acme Co</h1>', [])
+        ->with('<h1>Invoice for Acme Co</h1>', ['format' => 'pdf'])
         ->andReturn('%PDF-1.7 merged');
 
     $this->postJson('/api/v1/render', [

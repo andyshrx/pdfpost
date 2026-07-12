@@ -20,11 +20,20 @@ class RenderController extends Controller
             $request->validated('data') ?? [],
         );
 
-        $pdf = $engine->render($html, $request->validated('options') ?? []);
+        $format = $request->validated('format') ?? 'pdf';
 
-        return response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="render.pdf"',
+        $bytes = $engine->render($html, array_merge(
+            $request->validated('options') ?? [],
+            ['format' => $format],
+        ));
+
+        [$contentType, $extension] = $format === 'png'
+            ? ['image/png', 'png']
+            : ['application/pdf', 'pdf'];
+
+        return response($bytes, 200, [
+            'Content-Type' => $contentType,
+            'Content-Disposition' => 'inline; filename="render.'.$extension.'"',
         ]);
     }
 
