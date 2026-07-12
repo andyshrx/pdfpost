@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
             ForceJsonResponse::class,
         ]);
 
+        $middleware->throttleApi();
+
         $middleware->alias([
             'abilities' => CheckAbilities::class,
             'ability' => CheckForAnyAbility::class,
