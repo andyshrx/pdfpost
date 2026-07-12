@@ -1,7 +1,7 @@
 services:
   app:
     build: .
-    image: pdfpost
+    image: ghcr.io/andyshrx/pdfpost:latest
     ports:
       - "8080:8080"
     env_file: .env
@@ -19,7 +19,7 @@ services:
       - render
 
   worker:
-    image: pdfpost
+    image: ghcr.io/andyshrx/pdfpost:latest
     command: ["php", "/var/www/html/artisan", "queue:work", "--tries=3", "--max-time=3600"]
     env_file: .env
     environment:
@@ -35,7 +35,7 @@ services:
       - render
 
   scheduler:
-    image: pdfpost
+    image: ghcr.io/andyshrx/pdfpost:latest
     command: ["php", "/var/www/html/artisan", "schedule:work"]
     env_file: .env
     environment:
