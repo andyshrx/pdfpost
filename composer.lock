@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1abbd3d45d75bb59d4860a75ab67f97d",
+    "content-hash": "9e5fb7b1c7de67bce29dd78cf4814f8f",
     "packages": [
         {
             "name": "brick/math",
@@ -1057,6 +1057,68 @@
                 }
             ],
             "time": "2026-07-08T16:19:22+00:00"
+        },
+        {
+            "name": "keepsuit/liquid",
+            "version": "v0.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/keepsuit/php-liquid.git",
+                "reference": "53db5a3fbe407ab6f2aa993c42196cfa53f4ab84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/keepsuit/php-liquid/zipball/53db5a3fbe407ab6f2aa993c42196cfa53f4ab84",
+                "reference": "53db5a3fbe407ab6f2aa993c42196cfa53f4ab84",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^8.2",
+                "symfony/polyfill-php85": "^1.33"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.2",
+                "pestphp/pest": "^3.0 || ^4.0",
+                "pestphp/pest-plugin-arch": "^3.0 || ^4.0",
+                "phpbench/phpbench": "^1.4",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan": "^2.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "spatie/invade": "^2.0",
+                "spatie/ray": "^1.28",
+                "symfony/console": "^7.0 || ^8.0",
+                "symfony/var-exporter": "^7.0 || ^8.0",
+                "symfony/yaml": "^7.0 || ^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Keepsuit\\Liquid\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabio Capucci",
+                    "email": "f.capucci@keepsuit.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP implementation of liquid markup language",
+            "homepage": "https://github.com/keepsuit/php-liquid",
+            "keywords": [
+                "keepsuit",
+                "liquid"
+            ],
+            "support": {
+                "issues": "https://github.com/keepsuit/php-liquid/issues",
+                "source": "https://github.com/keepsuit/php-liquid/tree/v0.11.0"
+            },
+            "time": "2026-07-10T15:23:30+00:00"
         },
         {
             "name": "laravel/framework",
