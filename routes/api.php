@@ -10,7 +10,9 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/render', RenderController::class)->middleware('ability:render');
     Route::post('/renders', [AsyncRenderController::class, 'store'])->middleware('ability:render');
     Route::get('/renders/{render}', [AsyncRenderController::class, 'show'])->middleware('ability:render');
-    Route::apiResource('templates', TemplateController::class)->middleware('ability:templates');
+    Route::apiResource('templates', TemplateController::class)
+        ->names('api.templates')
+        ->middleware('ability:templates');
 });
 
 // artifact downloads use expiring signed urls instead of api tokens, so
