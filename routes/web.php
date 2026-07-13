@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Template;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -7,9 +8,15 @@ Route::get('/', function () {
     return redirect()->route('dashboard');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::get('dashboard', function () {
+    $templates = Template::with('currentVersion')->latest()->get()->map(fn ($template) => [
+        'slug' => $template->slug,
+        'name' => $template->name,
+        'data' => $template->currentVersion?->sample_data ?: (object) [],
+    ]);
+
+    return view('dashboard', compact('templates'));
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Volt::route('templates', 'templates.index')->name('templates.index');
