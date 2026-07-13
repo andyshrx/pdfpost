@@ -54,6 +54,13 @@ an API token:
 docker compose exec app php artisan pdfpost:token my-app
 ```
 
+It prints the token once. Copy it and set it in your shell so the examples below
+work as-is (keep the quotes, the token contains a `|`):
+
+```bash
+export TOKEN='2|paste-the-token-here'
+```
+
 <details>
 <summary>Running from source instead</summary>
 
