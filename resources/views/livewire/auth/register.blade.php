@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureRegistrationIsOpen;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
@@ -19,6 +20,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     public function register(): void
     {
+        // the route middleware only covers the page itself, livewire actions
+        // come in through their own endpoint so check again here
+        abort_unless(EnsureRegistrationIsOpen::open(), 403);
+
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],

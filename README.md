@@ -150,6 +150,8 @@ and webhook layer that turns it into a document API.
 
 - **Single tenant.** Template authors are trusted operators. There is no public rendering
   surface and no multi-tenant isolation (yet).
+- **Closed registration.** Signups lock once the first account exists.
+  `PDFPOST_ALLOW_REGISTRATION=true` reopens them.
 - **Sandboxed templates.** Liquid cannot execute code, touch the filesystem, or make
   network calls.
 - **Contained Chromium.** In the compose setup Gotenberg runs on an internal Docker

@@ -58,4 +58,17 @@ return [
 
     'webhook_secret' => env('PDFPOST_WEBHOOK_SECRET'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Registration
+    |--------------------------------------------------------------------------
+    |
+    | Signups stay open until the first account is created, then they close,
+    | since a self-hosted instance normally belongs to one operator. Set
+    | this to true if you actually want a public signup page.
+    |
+    */
+
+    'allow_registration' => (bool) env('PDFPOST_ALLOW_REGISTRATION', false),
+
 ];
