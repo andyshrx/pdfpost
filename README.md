@@ -39,6 +39,7 @@ git clone https://github.com/andyshrx/pdfpost.git && cd pdfpost
 cp .env.example .env
 docker compose run --rm app php artisan key:generate
 docker compose up -d   # pulls the prebuilt image from ghcr
+docker compose exec app php artisan pdfpost:install
 ```
 
 Prebuilt multi-arch images (amd64 and arm64) are published to
@@ -46,15 +47,18 @@ Prebuilt multi-arch images (amd64 and arm64) are published to
 run `docker compose build` first.
 
 That gives you the app on [http://localhost:8080](http://localhost:8080), a queue worker,
-a scheduler, and Gotenberg on an internal network. Register an account, seed the template
-gallery if you want examples (`docker compose exec app php artisan db:seed`), then mint
-an API token:
+a scheduler, and Gotenberg on an internal network. The install wizard creates your
+account, optionally seeds the sample template gallery, and mints your first API token.
+Signups close as soon as your account exists, so an exposed port is not an open signup
+page (set `PDFPOST_ALLOW_REGISTRATION=true` if you want it open).
+
+Need more tokens later:
 
 ```bash
 docker compose exec app php artisan pdfpost:token my-app
 ```
 
-It prints the token once. Copy it and set it in your shell so the examples below
+The token is printed once. Copy it and set it in your shell so the examples below
 work as-is (keep the quotes, the token contains a `|`):
 
 ```bash
@@ -69,10 +73,13 @@ docker run --rm -d -p 127.0.0.1:3000:3000 gotenberg/gotenberg:8
 composer install
 cp .env.example .env
 php artisan key:generate
-touch database/database.sqlite && php artisan migrate
+touch database/database.sqlite && php artisan pdfpost:install
 npm install && npm run build
 php artisan serve   # plus: php artisan queue:work
 ```
+
+The wizard runs migrations for you, then walks you through the same account, seed and
+token steps as the docker setup.
 
 </details>
 

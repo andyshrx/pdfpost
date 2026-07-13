@@ -18,7 +18,7 @@ class MintApiToken extends Command
         $user = User::query()->oldest('id')->first();
 
         if ($user === null) {
-            $this->error('No users exist yet. Register an account first, then mint a token.');
+            $this->error('No users exist yet. Run php artisan pdfpost:install first.');
 
             return self::FAILURE;
         }
