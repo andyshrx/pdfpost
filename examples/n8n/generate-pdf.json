@@ -1,0 +1,82 @@
+{
+  "name": "PDFPost - generate a PDF",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## PDFPost example\n\nGenerates a PDF from the seeded `invoice` template.\n\n**Setup, on the HTTP Request node:**\n1. `url` - point it at your PDFPost (default assumes n8n is in Docker Desktop and PDFPost is on the host).\n2. Create a Header Auth credential. Name: `Authorization`, Value: `Bearer <token>`, with a token from `php artisan pdfpost:token n8n`. A credential keeps the token out of this file if you ever export or share the workflow.\n\nThe rendered PDF comes out as binary on the `data` property. Add a node after it to email it, upload it, or write it to disk.",
+        "height": 380,
+        "width": 360
+      },
+      "id": "55acd510-35c6-40c8-92ff-b54a23a772b0",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -80
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b5950705-6ebe-471e-a177-d7b91f74c2a5",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        320,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:8080/api/v1/render",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"template\": \"invoice\",\n  \"data\": {\n    \"number\": \"INV-0043\",\n    \"date\": \"July 14, 2026\",\n    \"from\": { \"name\": \"Studio North\", \"email\": \"billing@studionorth.test\" },\n    \"to\": { \"name\": \"Acme Co\", \"email\": \"accounts@acme.test\" },\n    \"items\": [\n      { \"name\": \"Design sprint\", \"qty\": \"1\", \"price\": \"$1,200.00\" },\n      { \"name\": \"Development (10h)\", \"qty\": \"10\", \"price\": \"$1,500.00\" }\n    ],\n    \"total\": \"$2,700.00\",\n    \"notes\": \"Generated from n8n.\"\n  }\n}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file",
+              "outputPropertyName": "data"
+            }
+          }
+        }
+      },
+      "id": "75dc0ee4-00f1-44a5-9b67-3f952c63128c",
+      "name": "PDFPost render",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        560,
+        60
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          {
+            "node": "PDFPost render",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a455eb98-776c-4049-b5c3-aa35f597473f",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "6stZ9zfoqoiR1LZ5",
+  "tags": []
+}

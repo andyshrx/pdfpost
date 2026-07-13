@@ -99,6 +99,9 @@ curl -X POST http://localhost:8080/api/v1/render \
 One-off inline HTML works too, and `"format": "png"` returns a 1200x630 og-image instead
 of a PDF.
 
+Using n8n? [examples/n8n](examples/n8n/generate-pdf.json) has an importable workflow
+that calls the render endpoint from an HTTP Request node.
+
 ### Async + webhooks
 
 ```bash
