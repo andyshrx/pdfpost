@@ -21,11 +21,11 @@
             <flux:spacer />
 
             <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
+                <flux:navlist.item icon="folder-git-2" href="https://github.com/andyshrx/pdfpost" target="_blank">
                     Repository
                 </flux:navlist.item>
 
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits" target="_blank">
+                <flux:navlist.item icon="book-open-text" href="https://pdfpost.dev" target="_blank">
                     Documentation
                 </flux:navlist.item>
             </flux:navlist>
