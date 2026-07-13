@@ -7,6 +7,7 @@ services:
     env_file: .env
     environment:
       AUTORUN_ENABLED: "true" # run migrations on boot
+      PHP_OPCACHE_ENABLE: "1"
       PDFPOST_GOTENBERG_URL: http://gotenberg:3000
       # keep the sqlite file inside the storage volume, never mount over code
       DB_DATABASE: /var/www/html/storage/app/database.sqlite
@@ -25,6 +26,7 @@ services:
     command: ["php", "/var/www/html/artisan", "queue:work", "--tries=3", "--max-time=3600"]
     env_file: .env
     environment:
+      PHP_OPCACHE_ENABLE: "1"
       PDFPOST_GOTENBERG_URL: http://gotenberg:3000
       DB_DATABASE: /var/www/html/storage/app/database.sqlite
     volumes:
