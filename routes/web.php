@@ -23,6 +23,8 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('templates/create', 'templates.editor')->name('templates.create');
     Volt::route('templates/{template}/edit', 'templates.editor')->name('templates.edit');
 
+    Volt::route('tokens', 'tokens.index')->name('tokens.index');
+
     Route::redirect('settings', 'settings/profile');
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');

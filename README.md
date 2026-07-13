@@ -52,7 +52,7 @@ account, optionally seeds the sample template gallery, and mints your first API 
 Signups close as soon as your account exists, so an exposed port is not an open signup
 page (set `PDFPOST_ALLOW_REGISTRATION=true` if you want it open).
 
-Need more tokens later:
+Need more tokens later? There is an API tokens page in the dashboard, or use the cli:
 
 ```bash
 docker compose exec app php artisan pdfpost:token my-app

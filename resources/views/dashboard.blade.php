@@ -38,7 +38,8 @@
                         php artisan pdfpost:token
                         <flux:icon.clipboard x-show="! copied" class="size-3 text-zinc-400" />
                         <flux:icon.check x-show="copied" x-cloak class="size-3 text-green-500" />
-                    </button>,
+                    </button>
+                    or on the <a href="{{ route('tokens.index') }}" wire:navigate class="underline hover:text-zinc-800 dark:hover:text-zinc-200">API tokens</a> page,
                     then render a template with it. Drop it in where the request says
                     <code class="rounded bg-zinc-100 px-1.5 py-0.5 text-xs dark:bg-zinc-800">$TOKEN</code>.
                 </flux:subheading>
