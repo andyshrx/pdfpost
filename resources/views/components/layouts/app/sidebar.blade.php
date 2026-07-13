@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         @include('partials.head')
     </head>
@@ -7,9 +7,18 @@
         <flux:sidebar sticky stashable class="border-r border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-            <a href="{{ route('dashboard') }}" class="mr-5 flex items-center space-x-2" wire:navigate>
-                <x-app-logo class="size-8" href="#"></x-app-logo>
-            </a>
+            <div class="mr-5 flex items-center justify-between">
+                <a href="{{ route('dashboard') }}" class="flex items-center space-x-2" wire:navigate>
+                    <x-app-logo class="size-8" href="#"></x-app-logo>
+                </a>
+
+                <button type="button" x-data x-on:click="$flux.dark = ! $flux.dark"
+                    class="inline-flex items-center justify-center rounded-lg p-2 text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                    aria-label="Toggle dark mode">
+                    <flux:icon.sun x-show="$flux.dark" x-cloak class="size-5" />
+                    <flux:icon.moon x-show="! $flux.dark" x-cloak class="size-5" />
+                </button>
+            </div>
 
             <flux:navlist variant="outline">
                 <flux:navlist.group heading="Platform" class="grid">
@@ -81,6 +90,13 @@
             <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
             <flux:spacer />
+
+            <button type="button" x-data x-on:click="$flux.dark = ! $flux.dark"
+                class="mr-2 inline-flex items-center justify-center rounded-lg p-2 text-zinc-500 transition hover:bg-zinc-200 hover:text-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200"
+                aria-label="Toggle dark mode">
+                <flux:icon.sun x-show="$flux.dark" x-cloak class="size-5" />
+                <flux:icon.moon x-show="! $flux.dark" x-cloak class="size-5" />
+            </button>
 
             <flux:dropdown position="top" align="end">
                 <flux:profile
