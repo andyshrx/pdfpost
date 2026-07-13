@@ -2,11 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Template;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<\App\Models\Template>
+ * @extends Factory<Template>
  */
 class TemplateFactory extends Factory
 {

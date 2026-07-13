@@ -34,11 +34,4 @@ jobs:
           npm install
 
       - name: Run Pint
-        run: vendor/bin/pint
-
-      # - name: Commit Changes
-      #   uses: stefanzweifel/git-auto-commit-action@v5
-      #   with:
-      #     commit_message: fix code style
-      #     commit_options: '--no-verify'
-      #     file_pattern: '!.github/workflows/* **/*'
+        run: vendor/bin/pint --test

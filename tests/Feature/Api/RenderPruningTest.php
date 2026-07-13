@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Render;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Storage;
 
 it('prunes old renders and their artifacts', function () {
@@ -39,7 +40,7 @@ it('never prunes renders that are still queued or processing', function () {
 });
 
 it('schedules daily pruning', function () {
-    $events = collect(app(Illuminate\Console\Scheduling\Schedule::class)->events());
+    $events = collect(app(Schedule::class)->events());
 
     expect($events->contains(fn ($event) => str_contains($event->command ?? '', 'model:prune')))->toBeTrue();
 });
