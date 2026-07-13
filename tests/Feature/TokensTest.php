@@ -44,6 +44,18 @@ class TokensTest extends TestCase
         $this->assertSame(['render'], $token->abilities);
     }
 
+    public function test_the_shown_token_can_be_dismissed(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        Volt::test('tokens.index')
+            ->set('name', 'shiny new token')
+            ->set('abilities', ['render'])
+            ->call('createToken')
+            ->call('dismissToken')
+            ->assertSet('plainTextToken', null);
+    }
+
     public function test_token_needs_at_least_one_ability(): void
     {
         $this->actingAs(User::factory()->create());
