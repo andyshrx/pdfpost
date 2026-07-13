@@ -120,7 +120,13 @@ $valid = hash_equals(
 );
 ```
 
-The secret is `PDFPOST_WEBHOOK_SECRET`, or derived from `APP_KEY` when unset.
+Set `PDFPOST_WEBHOOK_SECRET` to a value you share with your receiver so you can verify
+the signature. If you leave it unset a secret is derived from `APP_KEY`, but then you'd
+have to dig it out of the app, so setting your own is easier.
+
+Webhook `artifact_url`s are built from `APP_URL` (a queued job has no request to infer the
+host from), so set `APP_URL` to the address where PDFPost is actually reachable, port
+included, or the download link won't resolve.
 
 ## Why not X?
 
